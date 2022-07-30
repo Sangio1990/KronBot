@@ -3,8 +3,8 @@ import nextcord
 
 class Visualizer:
     def __init__(self, player_1, player_2, original_message):
-        self.p1 = player_1.name
-        self.p2 = player_2.name
+        self.p1 = player_1
+        self.p2 = player_2
         self.original_message = original_message
         self.embed = nextcord.Embed()
         self.embed.add_field(
@@ -16,12 +16,12 @@ class Visualizer:
         self.embed.clear_fields()
         if adds is None:
             self.embed.add_field(
-                name="**Turno di " + active_player.name + "**",
+                name="**Turno di " + active_player + "**",
                 value=self.convert_grid_to_emojis_string(grid, active_player),
             )
         else:
             self.embed.add_field(
-                name="**Turno di " + active_player.name + "**",
+                name="**Turno di " + active_player + "**",
                 value=self.convert_grid_to_emojis_string(grid, active_player)
                 + "\n"
                 + adds,
@@ -44,10 +44,10 @@ class Visualizer:
             result += "\n"
 
         result += "\n:red_circle: **" + self.p1 + "**"
-        if active_player.name == self.p1:
+        if active_player == self.p1:
             result += " **<- Mossa**"
         result += "\n:blue_circle: **" + self.p2 + "**"
-        if active_player.name == self.p2:
+        if active_player == self.p2:
             result += " **<- Mossa**"
 
         return result

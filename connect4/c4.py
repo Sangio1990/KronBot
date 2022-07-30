@@ -51,7 +51,7 @@ class C4:
             await self.visualizer.send(
                 self.grid,
                 player_turn,
-                adds="**" + player_turn.name + " ha scelto la resa!**",
+                adds="**" + player_turn + " ha scelto la resa!**",
             )
 
     async def turn(self, player):
@@ -69,7 +69,7 @@ class C4:
             if result == "stop":
                 if self.check_win():
                     await self.visualizer.send(
-                        self.grid, player, adds="**" + player.name + " HA VINTO!**"
+                        self.grid, player, adds="**" + player + " HA VINTO!**"
                     )
                     return "end"
                 else:
@@ -80,7 +80,7 @@ class C4:
                 return "end"
 
     async def choose_column(self, player, message):
-        view = Buttons(player.name)
+        view = Buttons(player)
         await message.edit(view=view)
         await view.wait()
         if view.value == -1 or view.value == +1:
@@ -97,7 +97,7 @@ class C4:
     def drop(self, player):
         index = self.grid[0].index("c")
         depth = 6
-        token = "r" if player.name == self.p1.name else "b"
+        token = "r" if player == self.p1 else "b"
         while depth > 0:
             if self.grid[depth][index] == "v":
                 self.grid[depth][index] = token

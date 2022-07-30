@@ -1,9 +1,12 @@
-from tokenfile import tokenID
 import nextcord
+from commands.slash_commands import slash_command_list
+from command_manager.command_manager import CommandManager
 from nextcord.ext import commands
+from tokenfile import tokenID
 
-
-client = commands.Bot()
+intents = nextcord.Intents.all()
+client = commands.Bot(intents=intents)
+command_manager = CommandManager(client)
 
 
 @client.event
@@ -11,34 +14,17 @@ async def on_ready():
     print("Logged in as:", client.user)
 
 
-@client.slash_command(name="hi", description="Say hi to the bot")
-async def hello(interaction: nextcord.Interaction):
-    await interaction.send("Hello!")
+slash_command_list(client)
 
 
-@client.slash_command(
-    name="connect4", description="Choose a guild member and play to connect 4 with him!"
-)
-async def c4(interaction: nextcord.Interaction, player2: nextcord.Member):
-    from connect4.c4 import C4
-
-    if player2 == interaction.user:
-        await interaction.send("You cannot play vs yourself!")
+@client.event
+async def on_message(message):
+    if message.author == client.user:
+        pass
     else:
-        message = await interaction.channel.send("Loading...")
-        new_game = C4(interaction.user, player2, message)
-        await new_game.run()
-
-
-@client.slash_command(name="pick_a_number")
-async def choose_a_number(
-    interaction: nextcord.Interaction,
-    number: int = nextcord.SlashOption(
-        name="picker",
-        choices={"one": 1, "two": 2, "three": 3},
-    ),
-):
-    await interaction.response.send_message(f"You chose {number}!")
+        # this must be deleted and an observer done, is just for testing purpose:
+        if message.content.lower().startswith("!kr "):
+            await command_manager.manage_command(message)
 
 
 client.run(tokenID)
